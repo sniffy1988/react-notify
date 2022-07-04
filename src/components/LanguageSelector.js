@@ -1,21 +1,38 @@
-import React, { useReducer } from "react";
-import reducer from "../store";
+import { connect } from "react-redux";
 
-const LanguageSelector = () => {
-  const [state, dispatch] = useReducer(reducer, {
-    lng: "uk",
-  });
+const LanguageSelector = (props) => {
+  const { lng, dispatch } = props;
+  const codes = [
+    { code: "uk", name: "Українська" },
+    { code: "en", name: "English" },
+    { code: "ru", name: "Русский" },
+  ];
   return (
     <>
-      <div>Selected language: {state.lng}</div>
+      <div>Selected language: {lng}</div>
       <ul>
-        <li onClick={() => dispatch({ type: "SET_LNG", lng: "en" })}>EN</li>
-        <li onClick={() => dispatch({ type: "SET_LNG", lng: "ru" })}>RU</li>
-        <li onClick={() => dispatch({ type: "SET_LNG", lng: "uk" })}>UK</li>
+        {codes.map((code) => (
+          <li
+            key={code.code}
+            className="cursor-pointer hover:bg-gray-200"
+            onClick={() => {
+              dispatch({ type: "SET_STEP", step: 1 });
+              dispatch({ type: "SET_LNG", lng: code.code });
+            }}
+          >
+            {code.name}
+          </li>
+        ))}
       </ul>
       <hr />
     </>
   );
 };
 
-export default LanguageSelector;
+function mapStateToProps(state, ownProps) {
+  return {
+    ...ownProps,
+    lng: state.lng,
+  };
+}
+export default connect(mapStateToProps)(LanguageSelector);

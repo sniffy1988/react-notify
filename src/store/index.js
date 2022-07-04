@@ -1,11 +1,12 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
-const initialState = {
+export const initialState = {
   lng: "en",
   selectedDistrict: null,
   selectedCity: null,
   selectedRegion: null,
   selectedCommunity: null,
+  step: 0,
 };
 
 const setLng = createAction("SET_LNG");
@@ -13,24 +14,28 @@ const setDistrict = createAction("SET_DISTRICT");
 const setCity = createAction("SET_CITY");
 const setRegion = createAction("SET_REGION");
 const setCommunity = createAction("SET_COMMUNITY");
+const setStep = createAction("SET_STEP");
 
 const reducer = createReducer(initialState, (builder) => {
   builder
     .addCase(setLng, (state, action) => {
-      console.log(action);
       state.lng = action.lng;
     })
     .addCase(setDistrict, (state, action) => {
-      state.selectedDistrict = action.payload;
+      state.selectedDistrict = action.disctrict;
     })
     .addCase(setCity, (state, action) => {
-      state.selectedCity = action.payload;
+      state.selectedCity = action.city;
     })
     .addCase(setRegion, (state, action) => {
-      state.selectedRegion = action.payload;
+      state.selectedRegion = action.region;
     })
     .addCase(setCommunity, (state, action) => {
-      state.selectedCommunity = action.payload;
+      state.selectedCommunity = action.community;
+    })
+
+    .addCase(setStep, (state, action) => {
+      state.step = action.step;
     });
 });
 

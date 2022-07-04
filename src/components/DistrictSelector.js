@@ -1,38 +1,41 @@
-import React, { Component } from "react";
+import { connect } from "react-redux";
 import getDistricts from "../utils/getDisctricts";
-const disctricts = getDistricts(21);
 
-class DiscrictSelector extends Component {
-  state = {
-    lng: "uk",
-    district: null,
-  };
-  setDistrict = (district) => () => {
-    this.setState({
-      district: district,
-    });
-  };
+const DiscrictSelector = (props) => {
+  const { lng, selectedRegion, selectedDistrict, dispatch } = props;
+  const disctricts = getDistricts(selectedRegion.id);
 
-  render() {
-    return (
-      <>
-        <div>
-          Selected disctrict:{" "}
-          {this.state.district !== null
-            ? this.state.district.public_name[this.state.lng]
-            : ""}
-        </div>
-        <ul>
-          {disctricts.map((district) => (
-            <li key={district.id} onClick={this.setDistrict(district)}>
-              {district.public_name[this.state.lng]}
-            </li>
-          ))}
-        </ul>
-        <hr />
-      </>
-    );
-  }
+  return (
+    <>
+      <div>
+        Selected disctrict:{" "}
+        {selectedDistrict !== null ? selectedDistrict.public_name[lng] : ""}
+      </div>
+      <ul>
+        {disctricts.map((disctrict) => (
+          <li
+            key={disctrict.id}
+            className="cursor-pointer hover:bg-gray-200"
+            onClick={() => {
+              dispatch({ type: "SET_STEP", step: 3 });
+              dispatch({ type: "SET_DISTRICT", disctrict: disctrict });
+            }}
+          >
+            {disctrict.public_name[lng]}
+          </li>
+        ))}
+      </ul>
+      <hr />
+    </>
+  );
+};
+function mapStateToProps(state, ownProps) {
+  return {
+    ...ownProps,
+    lng: state.lng,
+    selectedRegion: state.selectedRegion,
+    selectedDistrict: state.selectedDistrict,
+  };
 }
 
-export default DiscrictSelector;
+export default connect(mapStateToProps)(DiscrictSelector);

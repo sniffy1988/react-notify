@@ -1,39 +1,40 @@
-import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import getCity from "../utils/getCity";
-const cities = getCity(1640);
 
-class CitySelector extends Component {
-  state = {
-    lng: "uk",
-    city: null,
+const CitySelector = (props) => {
+  const { lng, selectedCommunity, selectedCity, dispatch } = props;
+  const cities = getCity(selectedCommunity.id);
+  return (
+    <>
+      <div>
+        Selected city:{" "}
+        {selectedCity !== null ? selectedCity.public_name[lng] : ""}
+      </div>
+      <ul>
+        {cities.map((city) => (
+          <li
+            key={city.id}
+            className="cursor-pointer hover:bg-gray-200"
+            onClick={() => {
+              dispatch({ type: "SET_STEP", step: 5 });
+              dispatch({ type: "SET_CITY", city: city });
+            }}
+          >
+            {city.public_name[lng]}
+          </li>
+        ))}
+      </ul>
+      <hr />
+    </>
+  );
+};
+function mapStateToProps(state, ownProps) {
+  return {
+    ...ownProps,
+    lng: state.lng,
+    selectedCommunity: state.selectedCommunity,
+    selectedCity: state.selectedCity,
   };
-
-  setCity = (city) => () => {
-    this.setState({
-      city: city,
-    });
-  };
-
-  render() {
-    return (
-      <>
-        <div>
-          Selected city:{" "}
-          {this.state.city !== null
-            ? this.state.city.public_name[this.state.lng]
-            : "none"}{" "}
-        </div>
-        <ul>
-          {cities.map((city) => (
-            <li key={city.id} onClick={this.setCity(city)}>
-              {city.public_name[this.state.lng]}
-            </li>
-          ))}
-        </ul>
-        <hr />
-      </>
-    );
-  }
 }
-
-export default CitySelector;
+export default connect(mapStateToProps)(CitySelector);
