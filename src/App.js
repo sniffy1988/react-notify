@@ -6,9 +6,19 @@ import LanguageSelector from "./components/LanguageSelector";
 import RegionSelector from "./components/RegionSelector";
 import { connect } from "react-redux";
 import AlertStatus from "./components/AlertStatus";
+import showNotification from "./chrome/content";
+import { useState } from "react";
 
 function App(props) {
-  const { step } = props;
+  const { step, dispatch } = props;
+  const [isNotificationShown, setIsNotificationShown] = useState(false);
+  if (step < 5) {
+    if (!isNotificationShown) {
+      dispatch({ type: "SET_STEP", step: 0 });
+      showNotification("Set your location");
+      setIsNotificationShown(true);
+    }
+  }
   const currentStepComponent = () => {
     switch (step) {
       case 0:

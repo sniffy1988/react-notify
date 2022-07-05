@@ -25,7 +25,6 @@ function showNotification(text) {
   }
 }
 
-showNotification("test");
 // Create notifications service
 
 export default showNotification;
