@@ -27,7 +27,13 @@ function App(props) {
   };
 
   return (
-    <div className="App container mx-auto p-4">{currentStepComponent()}</div>
+    <div className="App container mx-auto p-4">
+      <ol>
+        <li>Check if position set up if not - show notification</li>
+        <li>If position already set = show last status</li>
+      </ol>
+      {currentStepComponent()}
+    </div>
   );
 }
 
