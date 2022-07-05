@@ -4,19 +4,33 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
+import { createStore } from "redux";
 import reducer from "./store";
+import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+import hardSet from "redux-persist/lib/stateReconciler/hardSet";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const store = configureStore({
-  devTools: process.env.NODE_ENV !== "production",
-  reducer: reducer,
-});
+const persistConfig = {
+  key: "root",
+  storage,
+  stateReconciler: hardSet,
+};
+
+const persistRed = persistReducer(persistConfig, reducer);
+
+let store = createStore(persistRed);
+
+let persistor = persistStore(store);
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );
